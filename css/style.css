@@ -1,0 +1,135 @@
+/* css/style.css */
+
+/* ------------------- */
+/* VARIÁVEIS E ESTILOS GLOBAIS */
+/* ------------------- */
+:root {
+    --color-background: #0D1117;
+    --color-surface-1: #161B22;
+    --color-border: #30363D;
+    
+    --color-heading: #FFFFFF;
+    --color-text: #C9D1D9;
+
+    --color-accent-cyan: #00D4FF;
+    --color-accent-purple: #B44BFF;
+    --accent-gradient: linear-gradient(90deg, var(--color-accent-cyan), var(--color-accent-purple));
+    
+    --font-primary: 'Poppins', sans-serif;
+    --font-secondary: 'Roboto', sans-serif;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+    background-color: var(--color-background);
+    color: var(--color-text);
+    font-family: var(--font-secondary);
+}
+.container { width: 90%; max-width: 1100px; margin: 0 auto; }
+
+/* ------------------- */
+/* HEADER E NAVEGAÇÃO */
+/* ------------------- */
+.main-header {
+    position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+    padding: 1.5rem 0;
+    transition: all 0.4s ease-in-out;
+}
+.main-header.scrolled {
+    background-color: rgba(22, 27, 34, 0.7);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--color-border);
+}
+.main-nav { display: flex; justify-content: space-between; align-items: center; }
+.logo img { height: 40px; transition: transform 0.3s ease; }
+.logo:hover img { transform: scale(1.05); }
+.nav-menu, .main-nav .btn { display: none; }
+
+/* ------------------- */
+/* SEÇÃO HERÓI */
+/* ------------------- */
+.hero-section {
+    position: relative; min-height: 100vh;
+    display: flex; align-items: center; text-align: center;
+    overflow: hidden;
+}
+.hero-glow {
+    position: absolute; top: 50%; left: 50%;
+    width: 800px; height: 800px;
+    background: radial-gradient(circle, rgba(0, 212, 255, 0.1), transparent 60%);
+    transform: translate(-50%, -50%);
+    z-index: 0;
+}
+#plexus-canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1; }
+.hero-content { position: relative; z-index: 2; }
+.hero-content h1 {
+    font-family: var(--font-primary); font-size: 2.8rem; font-weight: 700;
+    margin-bottom: 1rem; color: transparent;
+    background: var(--accent-gradient);
+    -webkit-background-clip: text; background-clip: text;
+}
+.hero-content p {
+    font-size: 1.125rem; max-width: 650px;
+    margin: 0 auto 2.5rem auto; line-height: 1.7;
+    color: var(--color-text);
+}
+
+/* ------------------- */
+/* BOTÕES */
+/* ------------------- */
+.btn {
+    padding: 14px 28px; border-radius: 8px; text-decoration: none;
+    font-weight: 600; font-family: var(--font-primary);
+    transition: all 0.3s ease; border: 2px solid transparent;
+    display: inline-block;
+}
+.btn-gradient {
+    color: var(--color-white); background: var(--accent-gradient);
+    background-size: 200% auto;
+}
+.btn-gradient:hover {
+    background-position: right center; transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.4);
+}
+.btn-outline {
+    color: var(--color-text); background-color: transparent;
+    border-image: var(--accent-gradient); border-image-slice: 1;
+}
+.btn-outline:hover {
+    background: var(--accent-gradient); color: var(--color-white);
+    box-shadow: 0 0 20px rgba(180, 75, 255, 0.4);
+    transform: scale(1.05);
+}
+
+/* ------------------- */
+/* ELEMENTOS E ANIMAÇÕES */
+/* ------------------- */
+.section-divider {
+    border: 0; height: 1px;
+    background: var(--color-border);
+    max-width: 1100px; margin: 0 auto;
+}
+.fade-in {
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+.fade-in.visible { opacity: 1; transform: translateY(0); }
+
+/* ------------------- */
+/* ESTILOS PARA DESKTOP (RESPONSIVO) */
+/* ------------------- */
+@media (min-width: 768px) {
+    .main-nav .btn, .nav-menu { display: flex; }
+    .nav-menu { align-items: center; list-style: none; gap: 2.5rem; }
+    .nav-menu a {
+        color: var(--color-text); text-decoration: none;
+        font-family: var(--font-primary); font-weight: 500;
+        transition: color 0.3s ease;
+    }
+    .nav-menu a:hover { color: var(--color-accent-cyan); }
+    
+    .hero-content h1 { font-size: 4.5rem; }
+}
