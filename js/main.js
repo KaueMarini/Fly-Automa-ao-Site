@@ -1,92 +1,30 @@
-// js/main.js
+// js/main.js (VERSÃO 3.0 - FOCO PROFISSIONAL)
 
-// Executa o código apenas quando o DOM estiver completamente carregado
 document.addEventListener('DOMContentLoaded', () => {
 
-    // --- FUNCIONALIDADE 1: HEADER "STICKY" COM EFEITO ---
+    // --- FUNCIONALIDADE 1: HEADER "STICKY" ---
     const header = document.querySelector('.main-header');
-    
-    window.addEventListener('scroll', () => {
-        // Adiciona a classe 'scrolled' se o scroll passar de 50px, senão remove
-        if (window.scrollY > 50) {
-            header.classList.add('scrolled');
-        } else {
-            header.classList.remove('scrolled');
-        }
-    });
-
+    if (header) {
+        window.addEventListener('scroll', () => {
+            header.classList.toggle('scrolled', window.scrollY > 50);
+        });
+    }
 
     // --- FUNCIONALIDADE 2: ANIMAÇÃO DE SCROLL (FADE-IN) ---
-    // Usando a API Intersection Observer para performance máxima
     const fadeInElements = document.querySelectorAll('.fade-in');
+    if (fadeInElements.length > 0) {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        fadeInElements.forEach(el => observer.observe(el));
+    }
 
-    const observerOptions = {
-        root: null, // observa em relação ao viewport
-        rootMargin: '0px',
-        threshold: 0.1 // aciona quando 10% do elemento está visível
-    };
-
-    const observer = new IntersectionObserver((entries, observer) => {
-        entries.forEach(entry => {
-            // Se o elemento está visível
-            if (entry.isIntersecting) {
-                entry.target.classList.add('visible');
-                // Deixa de observar o elemento após a animação para economizar recursos
-                observer.unobserve(entry.target);
-            }
-        });
-    }, observerOptions);
-
-    // Observa cada elemento com a classe .fade-in
-    fadeInElements.forEach(el => {
-        observer.observe(el);
-    });
+    // Efeitos interativos de mouse foram removidos para um design mais clean.
     
-
-    // --- FUNCIONALIDADE 3: ANIMAÇÃO DE FUNDO (PLEXUS EFFECT) ---
-    // Esta é uma implementação conceitual e simplificada.
-    // Para um efeito completo, bibliotecas como 'particles.js' são recomendadas,
-    // mas entender a lógica é o pensamento do especialista.
-    const canvas = document.getElementById('plexus-canvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    let particlesArray;
-
-    // Classe para criar cada partícula
-    class Particle {
-        // ... (lógica complexa para criar, mover e desenhar partículas)
-    }
-
-    // Função para inicializar as partículas
-    function init() {
-        // ... (cria um array de partículas com posições e velocidades aleatórias)
-    }
-
-    // Função para conectar partículas que estão próximas
-    function connect() {
-        // ... (percorre o array, calcula a distância entre as partículas e desenha uma linha se estiverem perto o suficiente)
-    }
-
-    // Loop de animação
-    function animate() {
-        requestAnimationFrame(animate);
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        
-        // ... (atualiza a posição de cada partícula e chama a função connect())
-    }
-
-    // init();
-    // animate();
-    
-    // Recalcula o tamanho do canvas se a janela for redimensionada
-    window.addEventListener('resize', () => {
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
-        // init();
-    });
-
-    console.log("Fly Automação site inicializado com sucesso!");
-
+    console.log("Fly Automação: Site v3.0 inicializado com sucesso!");
 });
