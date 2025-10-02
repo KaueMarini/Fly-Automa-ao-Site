@@ -671,10 +671,10 @@ p {
 
 .service-detail-image img {
     width: 100%;
-    height: auto;
+    height: 400px; /* Define uma altura fixa para todas as imagens */
+    object-fit: cover; /* Garante que a imagem cubra todo o espaço sem distorcer */
     border-radius: 12px;
 }
-
 @media (max-width: 768px) {
     .footer-grid {
         grid-template-columns: 1fr;
@@ -712,14 +712,14 @@ p {
         grid-template-columns: repeat(3, 1fr); 
     }
     .main-nav {
-        position: static; /* Correção */
+        position: static; 
     }
     .logo {
-        position: static; /* Correção */
-        transform: none; /* Correção */
+        position: static; 
+        transform: none; 
     }
     .logo img {
-        height: 80px; /* Correção */
+        height: 80px; 
     }
     .blog-grid {
         grid-template-columns: repeat(3, 1fr);
@@ -764,21 +764,23 @@ p {
 
 .story-image-wrapper {
     position: relative;
-    max-width: 400px; /* Limita o tamanho máximo da imagem */
-    margin: 0 auto; /* Centraliza o container da imagem */
+    max-width: 370px;
+    margin: 0 auto;
     width: 100%;
+    aspect-ratio: 1 / 1; /* Força o contêiner a ser um quadrado perfeito */
+    border-radius: 12px;   /* Adiciona o arredondamento aqui */
+    overflow: hidden;      /* Garante que a imagem não ultrapasse a borda arredondada */
 }
 
 .story-image-wrapper img {
     width: 100%;
-    border-radius: 12px;
+    height: 100%;          /* Força a imagem a preencher a altura e largura do contêiner */
     object-fit: cover;
-    aspect-ratio: 1 / 1; /* Imagem quadrada */
     transition: transform 0.4s ease;
 }
 
 .story-image-wrapper:hover img {
-    transform: scale(1.03); /* Efeito de zoom sutil */
+    transform: scale(1.03); 
 }
 
 .story-tag {
@@ -805,7 +807,7 @@ p {
     color: var(--color-heading);
 }
 
-/* Seção de Missão e Visão */
+
 .mission-vision-section {
     padding: 80px 0;
     background-color: var(--color-surface-1);
@@ -825,14 +827,14 @@ p {
     margin-bottom: 1rem;
 }
 
-/* Media queries para responsividade */
+
 @media (min-width: 768px) {
     .story-grid {
         grid-template-columns: 1fr 1fr;
         gap: 4rem;
     }
 
-    /* Inverte a ordem para o layout alternado */
+    
     .story-grid.reverse .story-image-wrapper {
         order: 2;
     }
@@ -843,6 +845,15 @@ p {
     .mission-vision-grid {
         grid-template-columns: 1fr 1fr;
         gap: 4rem;
-        text-align: left;
+        
     }
+}
+.cta-section {
+    /* Reduzimos o espaço superior e mantivemos um bom espaço inferior */
+    padding: 5px 0 70px 0;
+    background-color: var(--color-surface-1);
+}
+
+.cta-section .section-title {
+    margin-bottom: 2.5rem;
 }
