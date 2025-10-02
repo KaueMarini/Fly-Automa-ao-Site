@@ -748,129 +748,102 @@ p {
     }
     
 }
-/* css/style.css */
-
 /* ------------------- */
-/* PÁGINA SOBRE NÓS (HISTÓRIA) */
+/* PÁGINA SOBRE NÓS (NOVO DESIGN) */
 /* ------------------- */
 
-.about-story-section {
-    padding-bottom: 120px;
+.story-section {
+    padding: 80px 0;
 }
 
-.timeline {
-    position: relative;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 2rem 0;
-}
-
-.timeline::after {
-    content: '';
-    position: absolute;
-    width: 3px;
-    background-color: var(--color-border);
-    top: 0;
-    bottom: 0;
-    left: 15px;
-}
-
-.timeline-item {
-    padding: 1rem 3rem;
-    position: relative;
-    background-color: inherit;
-}
-
-.timeline-item::before {
-    content: '';
-    position: absolute;
-    width: 25px;
-    height: 25px;
-    left: 4px;
-    background-color: var(--color-background);
-    border: 3px solid var(--color-accent-cyan);
-    top: 24px;
-    border-radius: 50%;
-    z-index: 1;
-}
-
-.timeline-date {
-    display: inline-block;
-    font-family: var(--font-primary);
-    font-weight: 600;
-    color: var(--color-accent-cyan);
-    margin-bottom: 0.5rem;
-}
-
-.timeline-content h2 {
-    font-family: var(--font-primary);
-    font-size: 2rem;
-    color: var(--color-heading);
-    margin-bottom: 1rem;
-}
-
-/* ESTILOS DA IMAGEM DA TIMELINE - CORREÇÃO DE ALINHAMENTO */
-.timeline-image {
-    margin: 1.5rem 0;
-    overflow: hidden;
-    border-radius: 12px;
-    border: 1px solid var(--color-border);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-}
-
-.timeline-image img {
-    width: 100%;
-    height: auto;
-    display: block;
-    transition: transform 0.4s ease;
-}
-
-.timeline-item:hover .timeline-image img {
-    transform: scale(1.05);
-}
-
-.mission-section {
-    padding: 100px 0;
-}
-
-.mission-grid {
+.story-grid {
     display: grid;
     grid-template-columns: 1fr;
     gap: 3rem;
+    align-items: center;
 }
 
-.mission-item h3 {
+.story-image-wrapper {
+    position: relative;
+    max-width: 400px; /* Limita o tamanho máximo da imagem */
+    margin: 0 auto; /* Centraliza o container da imagem */
+    width: 100%;
+}
+
+.story-image-wrapper img {
+    width: 100%;
+    border-radius: 12px;
+    object-fit: cover;
+    aspect-ratio: 1 / 1; /* Imagem quadrada */
+    transition: transform 0.4s ease;
+}
+
+.story-image-wrapper:hover img {
+    transform: scale(1.03); /* Efeito de zoom sutil */
+}
+
+.story-tag {
+    display: inline-block;
+    color: var(--color-accent-cyan);
+    font-family: var(--font-primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+}
+
+.story-content h2 {
+    font-family: var(--font-primary);
+    font-size: 2.5rem;
+    color: var(--color-heading);
+    margin-bottom: 1.5rem;
+}
+
+.story-content p {
+    font-size: 1.1rem;
+    line-height: 1.9;
+}
+
+.story-content strong {
+    color: var(--color-heading);
+}
+
+/* Seção de Missão e Visão */
+.mission-vision-section {
+    padding: 80px 0;
+    background-color: var(--color-surface-1);
+}
+
+.mission-vision-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+    text-align: center;
+}
+
+.mission-item h3, .vision-item h3 {
     font-family: var(--font-primary);
     font-size: 1.75rem;
     color: var(--color-heading);
     margin-bottom: 1rem;
 }
 
+/* Media queries para responsividade */
 @media (min-width: 768px) {
-    .timeline::after {
-        left: 50%;
-    }
-    .timeline-item {
-        width: 50%;
-    }
-    .timeline-item:nth-child(odd) {
-        left: 0;
-        padding: 1rem 40px 1rem 0;
-        text-align: right;
-    }
-    .timeline-item:nth-child(even) {
-        left: 50%;
-        padding: 1rem 0 1rem 40px;
-    }
-    .timeline-item::before {
-        left: -12px;
-        top: 24px;
-    }
-    .timeline-item:nth-child(odd)::before {
-        right: -14px;
-        left: auto;     
-    }
-    .mission-grid {
+    .story-grid {
         grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+    }
+
+    /* Inverte a ordem para o layout alternado */
+    .story-grid.reverse .story-image-wrapper {
+        order: 2;
+    }
+    .story-grid.reverse .story-content {
+        order: 1;
+    }
+    
+    .mission-vision-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        text-align: left;
     }
 }
