@@ -285,7 +285,6 @@ p {
     z-index: 1;
     transition: transform 0.4s ease;
 }
-
 .about-image-wrapper:hover .image-decoration {
     transform: translate(10px, 10px);
 }
