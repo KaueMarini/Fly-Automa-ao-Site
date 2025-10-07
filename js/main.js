@@ -1,7 +1,7 @@
+// Clean, safe frontend main.js — usa proxy local para não expor tokens
 document.addEventListener('DOMContentLoaded', () => {
-
     // --- ANIMAÇÕES E EFEITOS DO SITE ---
-    console.log("Fly Automação: Site v3.0 inicializado com sucesso!");
+    console.log('Fly Automação: Site v3.0 inicializado com sucesso!');
 
     const header = document.querySelector('.main-header');
     if (header) {
@@ -12,18 +12,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const fadeInElements = document.querySelectorAll('.fade-in');
     if (fadeInElements.length > 0) {
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        fadeInElements.forEach(el => observer.observe(el));
+        const observer = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            },
+            { threshold: 0.1 }
+        );
+        fadeInElements.forEach((el) => observer.observe(el));
     }
 
-    // --- LÓGICA DO MENU MOBILE ---
+    // --- MENU MOBILE ---
     const navToggle = document.querySelector('.nav-toggle');
     if (navToggle) {
         navToggle.addEventListener('click', () => {
@@ -31,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- LÓGICA DO BLOG DINÂMICO ---
+    // --- CONFIGURAÇÕES DO BACKEND ---
 
     const STRAPI_URL = "https://remarkable-bear-63ed3d8a30.strapiapp.com";
     const STRAPI_TOKEN = "0c2b6b47dd82bafbb50c3b82f9210dd137cd58e96fe34ee11e4bca2cb168731c20146bd816de427afa12846ee0d3046327e08fa3fb36efdd4c121ed6adf8b31a5e30904f96ba9df275beb519c779d0987714250c075bc1b62cf9d7febd0ad49a1accbdf371db2eb93e93f1020e48a4b3c0c339a048a91a3af46b80f84fb8aeff";
@@ -105,7 +108,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 data.forEach(post => {
-                    const imageUrl = post.cover?.url || 'https://images.unsplash.com/photo-1483817101829-339b08e8d83f?q=80&w=1104&auto=format&fit=crop';
+                    const imageUrl = post.cover?.url || 'https://images.unsplash.com/photo-1483817101829-339b08e8d83f?q=80&w=1104&auto=format=fit=crop';
 
                     const postCardHTML = `
                         <a href="post.html?slug=${post.slug}" class="post-card-full fade-in visible">
