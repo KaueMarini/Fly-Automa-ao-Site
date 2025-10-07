@@ -1,5 +1,3 @@
-// Arquivo js/main.js - VERSÃO FINAL BASEADA NO CÓDIGO FUNCIONAL
-
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- ANIMAÇÕES E EFEITOS DO SITE ---
@@ -25,6 +23,14 @@ document.addEventListener('DOMContentLoaded', () => {
         fadeInElements.forEach(el => observer.observe(el));
     }
 
+    // --- LÓGICA DO MENU MOBILE ---
+    const navToggle = document.querySelector('.nav-toggle');
+    if (navToggle) {
+        navToggle.addEventListener('click', () => {
+            document.body.classList.toggle('nav-open');
+        });
+    }
+
     // --- LÓGICA DO BLOG DINÂMICO ---
 
     const STRAPI_URL = "https://remarkable-bear-63ed3d8a30.strapiapp.com";
@@ -42,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(dateString).toLocaleDateString('pt-BR', options);
     };
 
-    // NOVO: Lógica para a secção de blog na homepage (index.html)
+    //Lógica para a secção de blog na homepage (index.html)
     const homeBlogGrid = document.querySelector('.blog-grid');
     if (homeBlogGrid) {
         const fetchHomePosts = async () => {
@@ -81,7 +87,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchHomePosts();
     }
 
-    // Lógica para a página principal do blog (blog.html) - BASEADA NA SUA VERSÃO FUNCIONAL
+    // Lógica para a página principal do blog (blog.html)
     const blogListContainer = document.querySelector('.blog-list-section');
     if (blogListContainer) {
         const fetchPosts = async () => {
@@ -125,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPosts();
     }
 
-    // Lógica para a página de um único post (post.html) - BASEADA NA SUA VERSÃO FUNCIONAL
+    // Lógica para a página de um único post (post.html)
     const postArticleContainer = document.querySelector('.post-article');
     if (postArticleContainer) {
         const fetchSinglePost = async () => {
