@@ -190,4 +190,76 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         fetchSinglePost();
     }
+
+    // --- LÓGICA DO MODAL DE WHATSAPP ---
+    const fab = document.getElementById('whatsapp-fab');
+    const modalOverlay = document.getElementById('whatsapp-modal-overlay');
+    const closeModalBtn = document.getElementById('whatsapp-modal-close');
+    const form = document.getElementById('whatsapp-form');
+
+    // Função para abrir o modal
+    const openModal = (e) => {
+        e.preventDefault();
+        modalOverlay.classList.add('visible');
+    };
+
+    // Função para fechar o modal
+    const closeModal = () => {
+        modalOverlay.classList.remove('visible');
+    };
+
+    // Abrir modal ao clicar no botão flutuante
+    if (fab) {
+        fab.addEventListener('click', openModal);
+    }
+
+    // Fechar modal ao clicar no 'X'
+    if (closeModalBtn) {
+        closeModalBtn.addEventListener('click', closeModal);
+    }
+
+    // Fechar modal ao clicar fora da área do modal
+    if (modalOverlay) {
+        modalOverlay.addEventListener('click', (e) => {
+            if (e.target === modalOverlay) {
+                closeModal();
+            }
+        });
+    }
+
+    // Lidar com o envio do formulário
+    if (form) {
+        // Aplicar máscara de telefone com iMask.js
+        const phoneInput = document.getElementById('whatsapp-phone');
+        const phoneMask = IMask(phoneInput, {
+            mask: '(00) 00000-0000'
+        });
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Pegar os dados do formulário
+            const name = document.getElementById('whatsapp-name').value;
+            const service = document.getElementById('whatsapp-service').value;
+            
+            // Número de telefone da sua empresa (apenas números)
+            const businessPhone = '5513996901919';
+            
+            // Montar a mensagem pré-pronta, agora mais limpa
+            const message = `Olá! Meu nome é *${name}*, tenho interesse em *${service}*.`;
+            
+            // Codificar a mensagem para URL
+            const encodedMessage = encodeURIComponent(message);
+            
+            // Criar a URL do WhatsApp
+            const whatsappUrl = `https://wa.me/${businessPhone}?text=${encodedMessage}`;
+            
+            // Abrir o WhatsApp em uma nova aba
+            window.open(whatsappUrl, '_blank');
+            
+            // Opcional: fechar o modal e limpar o formulário após o envio
+            closeModal();
+            form.reset();
+        });
+    }
 });
