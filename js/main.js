@@ -36,8 +36,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONFIGURAÇÕES DO BACKEND ---
 
-    const STRAPI_URL = "https://remarkable-bear-63ed3d8a30.strapiapp.com";
-    const STRAPI_TOKEN = "0c2b6b47dd82bafbb50c3b82f9210dd137cd58e96fe34ee11e4bca2cb168731c20146bd816de427afa12846ee0d3046327e08fa3fb36efdd4c121ed6adf8b31a5e30904f96ba9df275beb519c779d0987714250c075bc1b62cf9d7febd0ad49a1accbdf371db2eb93e93f1020e48a4b3c0c339a048a91a3af46b80f84fb8aeff";
+    const STRAPI_URL = "https://mindful-card-cc3832d952.strapiapp.com";
+    const STRAPI_TOKEN = "f90c12ae24aef1333c12c7ecff452e12e72cf250962a4cc8b0f8f233c5b14c93abfbd2d81dfe273fedd15889e5c0a3a19734e67ca87fcf8c649f85d3f35038f5d612ff3ff9a2dbe0305b65c0d76c99dbc3499c5742734caef9d1cf412e1baa79a5a2a9ea85253036cb11fe9a8805e2dccb470978b4ce14a0fb7a2bc187f02918";
 
     const fetchOptions = {
         headers: {

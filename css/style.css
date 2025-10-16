@@ -324,8 +324,22 @@ body.nav-open .main-header .btn-outline {
     transition: color 0.3s ease;
 }
 
+.service-card .card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    height: 50px;
+}
+
 .service-card:hover h3 {
     color: var(--color-accent-cyan);
+}
+
+/* Adicionando estilo para o botão do WhatsApp Business no formulário */
+.contact-form .btn-outline {
+    margin-top: 1rem;
+    display: block;
+    text-align: center;
 }
 
 .about-section { 
@@ -779,6 +793,31 @@ body.nav-open .main-header .btn-outline {
 @media (max-width: 768px) {
     .footer-grid {
         grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .hero-content h1 {
+        font-size: 2.5rem;
+    }
+
+    .section-title h2 {
+        font-size: 2rem;
+    }
+
+    .story-section {
+        padding: 60px 0;
+    }
+
+    .service-card {
+        padding: 2rem 1.5rem;
+    }
+
+    .service-card h3 {
+        font-size: 1.3rem;
+    }
+
+    .whatsapp-modal {
+        padding: 2rem 1.5rem;
     }
 }
 
