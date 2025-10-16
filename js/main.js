@@ -1,4 +1,3 @@
-// Clean, safe frontend main.js — usa proxy local para não expor tokens
 document.addEventListener('DOMContentLoaded', () => {
     // --- ANIMAÇÕES E EFEITOS DO SITE ---
     console.log('Fly Automação: Site v3.0 inicializado com sucesso!');
