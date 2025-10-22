@@ -35,8 +35,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- CONFIGURAÇÕES DO BACKEND ---
 
-    const STRAPI_URL = "https://mindful-card-cc3832d952.strapiapp.com";
-    const STRAPI_TOKEN = "f90c12ae24aef1333c12c7ecff452e12e72cf250962a4cc8b0f8f233c5b14c93abfbd2d81dfe273fedd15889e5c0a3a19734e67ca87fcf8c649f85d3f35038f5d612ff3ff9a2dbe0305b65c0d76c99dbc3499c5742734caef9d1cf412e1baa79a5a2a9ea85253036cb11fe9a8805e2dccb470978b4ce14a0fb7a2bc187f02918";
 
     const fetchOptions = {
         headers: {
@@ -55,9 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
     if (homeBlogGrid) {
         const fetchHomePosts = async () => {
             try {
-                const response = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=3`, fetchOptions);
+                const response = await fetch('/.netlify/functions/get-home-posts');
                 if (!response.ok) throw new Error('Falha ao buscar os artigos para a home');
-                
+
                 const { data } = await response.json();
                 
                 homeBlogGrid.innerHTML = ''; 
@@ -94,10 +92,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (blogListContainer) {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc`, fetchOptions);
+                const response = await fetch('/.netlify/functions/get-all-posts');
                 if (!response.ok) throw new Error('Falha ao buscar os artigos');
-                
-                const { data } = await response.json(); 
+
+                const { data } = await response.json();
                 
                 blogListContainer.innerHTML = ''; 
 
@@ -146,7 +144,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const response = await fetch(`${STRAPI_URL}/api/articles?filters[slug][$eq]=${postSlug}&populate=*`, fetchOptions);
+                const response = await fetch(`/.netlify/functions/get-single-post?slug=${postSlug}`);
                 if (!response.ok) throw new Error('Artigo não encontrado');
 
                 const { data } = await response.json();
