@@ -35,14 +35,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
 
-    const STRAPI_URL = "https://mindful-card-cc3832d952.strapiapp.com";
-    const STRAPI_TOKEN = "f90c12ae24aef1333c12c7ecff452e12e72cf250962a4cc8b0f8f233c5b14c93abfbd2d81dfe273fedd15889e5c0a3a19734e67ca87fcf8c649f85d3f35038f5d612ff3ff9a2dbe0305b65c0d76c99dbc3499c5742734caef9d1cf412e1baa79a5a2a9ea85253036cb11fe9a8805e2dccb470978b4ce14a0fb7a2bc187f02918";
-
-    const fetchOptions = {
-        headers: {
-            'Authorization': `Bearer ${STRAPI_TOKEN}`
-        }
-    };
+    // Atenção: chaves e URLs sensíveis foram removidas do frontend.
+    // As requisições agora apontam para Netlify Functions em /.netlify/functions/*
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -55,27 +49,34 @@ document.addEventListener('DOMContentLoaded', () => {
     if (homeBlogGrid) {
         const fetchHomePosts = async () => {
             try {
-                const response = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc&pagination[limit]=3`, fetchOptions);
+                const response = await fetch('/.netlify/functions/get-home-posts');
                 if (!response.ok) throw new Error('Falha ao buscar os artigos para a home');
-                
-                const { data } = await response.json();
+                const payload = await response.json();
+                // payload pode ser um objeto com { data: [...] } ou já o array dependendo da função
+                const data = payload.data || payload;
                 
                 homeBlogGrid.innerHTML = ''; 
+                if (!data || data.length === 0) {
+                    homeBlogGrid.innerHTML = '<p>Nenhum artigo recente encontrado.</p>';
+                    return;
+                }
 
-                if (!data || data.length === 0) return;
+                data.forEach(item => {
+                    const post = item.attributes ? item.attributes : item;
+                    // ajustar caminho da imagem caso venha com data.attributes
+                    const cover = post.cover?.data?.attributes || post.cover;
+                    const imageUrl = (cover && (cover.formats?.small?.url || cover.url)) || 'https://images.unsplash.com/photo-1544214249-9f342c81e87d?q=80&w=2070&auto=format=fit=crop';
+                    const postSlug = post.slug || post.slug;
 
-                data.forEach(post => {
-                    const imageUrl = post.cover?.formats?.small?.url || post.cover?.url || 'https://images.unsplash.com/photo-1544214249-9f342c81e87d?q=80&w=2070&auto=format=fit=crop';
-                    
                     const postCardHTML = `
-                        <a href="post.html?slug=${post.slug}" class="post-card fade-in visible">
+                        <a href="post.html?slug=${postSlug}" class="post-card fade-in visible">
                             <div class="post-image-wrapper">
-                                <img src="${imageUrl}" alt="Imagem do artigo ${post.title || ''}">
+                                <img src="${imageUrl.startsWith('http') ? imageUrl : imageUrl}" alt="Imagem do artigo ${post.title || ''}">
                             </div>
                             <div class="post-content">
-                                <span class="post-category">${post.category?.name || 'Sem Categoria'}</span>
+                                <span class="post-category">${post.category?.data?.attributes?.name || post.category?.name || 'Sem Categoria'}</span>
                                 <h3>${post.title || 'Artigo sem Título'}</h3>
-                                <span class="post-date">${formatDate(post.createdAt)}</span>
+                                <span class="post-date">${formatDate(post.createdAt || post.publishedAt)}</span>
                             </div>
                         </a>
                     `;
@@ -94,11 +95,12 @@ document.addEventListener('DOMContentLoaded', () => {
     if (blogListContainer) {
         const fetchPosts = async () => {
             try {
-                const response = await fetch(`${STRAPI_URL}/api/articles?populate=*&sort=publishedAt:desc`, fetchOptions);
+                const response = await fetch('/.netlify/functions/get-all-posts');
                 if (!response.ok) throw new Error('Falha ao buscar os artigos');
-                
-                const { data } = await response.json(); 
-                
+
+                const payload = await response.json();
+                const data = payload.data || payload;
+
                 blogListContainer.innerHTML = ''; 
 
                 if (!data || data.length === 0) {
@@ -106,8 +108,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                data.forEach(post => {
-                    const imageUrl = post.cover?.url || 'https://images.unsplash.com/photo-1483817101829-339b08e8d83f?q=80&w=1104&auto=format=fit=crop';
+                data.forEach(item => {
+                    const post = item.attributes ? item.attributes : item;
+                    const cover = post.cover?.data?.attributes || post.cover;
+                    const imageUrl = (cover && (cover.formats?.small?.url || cover.url)) || 'https://images.unsplash.com/photo-1483817101829-339b08e8d83f?q=80&w=1104&auto=format=fit=crop';
 
                     const postCardHTML = `
                         <a href="post.html?slug=${post.slug}" class="post-card-full fade-in visible">
@@ -115,10 +119,10 @@ document.addEventListener('DOMContentLoaded', () => {
                                 <img src="${imageUrl}" alt="Imagem do artigo ${post.title || ''}">
                             </div>
                             <div class="post-content">
-                                <span class="post-category">${post.category?.name || 'Sem Categoria'}</span>
+                                <span class="post-category">${post.category?.data?.attributes?.name || post.category?.name || 'Sem Categoria'}</span>
                                 <h3>${post.title || 'Artigo sem Título'}</h3>
                                 <p>${post.description || ''}</p>
-                                <span class="post-date">${formatDate(post.createdAt)}</span>
+                                <span class="post-date">${formatDate(post.createdAt || post.publishedAt)}</span>
                             </div>
                         </a>
                     `;
@@ -146,19 +150,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                const response = await fetch(`${STRAPI_URL}/api/articles?filters[slug][$eq]=${postSlug}&populate=*`, fetchOptions);
+                const response = await fetch(`/.netlify/functions/get-single-post?slug=${encodeURIComponent(postSlug)}`);
                 if (!response.ok) throw new Error('Artigo não encontrado');
 
-                const { data } = await response.json();
-                
+                const payload = await response.json();
+                const data = payload.data || payload;
+
                 if (!data || data.length === 0) {
                      postArticleContainer.innerHTML = '<h1>Artigo não encontrado.</h1>';
                     return;
                 }
 
-                const post = data[0];
+                const post = data[0].attributes ? data[0].attributes : data[0];
                 document.title = `${post.title || 'Artigo'} | Fly Automação`;
-                const imageUrl = post.cover?.url || 'https://images.unsplash.com/photo-1677756119517-756a/1w=2070&auto=format&fit=crop';
+                const cover = post.cover?.data?.attributes || post.cover;
+                const imageUrl = (cover && (cover.url || cover.formats?.large?.url)) || 'https://images.unsplash.com/photo-1677756119517-756a/1w=2070&auto=format&fit=crop';
 
                 let postBodyHTML = '';
                 if (post.blocks && Array.isArray(post.blocks)) {
@@ -268,7 +274,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
 
             
-            const N8N_WEBHOOK_URL = "https://n8n.srv1005861.hstgr.cloud/webhook/b383b693-b319-4213-b7d8-5f239a2141ff";
+        // N8N webhook removido do frontend — agora usamos a Netlify Function /submit-form
 
             const form = e.target;
             const formData = new FormData(form);
@@ -287,7 +293,7 @@ document.addEventListener('DOMContentLoaded', () => {
             button.textContent = "Enviando...";
 
             try {
-                const response = await fetch(N8N_WEBHOOK_URL, {
+                const response = await fetch('/.netlify/functions/submit-form', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -299,13 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     throw new Error('Falha no envio');
                 }
 
-                // Se tudo deu certo, redireciona para a página de obrigado
                 window.location.href = '/obrigado.html';
 
             } catch (error) {
                 console.error('Erro ao enviar formulário:', error);
                 alert('Ocorreu um erro ao enviar sua mensagem. Tente novamente.');
-                // Reativa o botão em caso de erro
+                
                 button.disabled = false;
                 button.textContent = buttonTextOriginal;
             }
