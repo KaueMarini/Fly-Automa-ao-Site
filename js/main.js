@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- ANIMAÇÕES E EFEITOS DO SITE ---
+    
     console.log('Fly Automação: Site v3.0 inicializado com sucesso!');
 
     const header = document.querySelector('.main-header');
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fadeInElements.forEach((el) => observer.observe(el));
     }
 
-    // --- MENU MOBILE ---
+    
     const navToggle = document.querySelector('.nav-toggle');
     if (navToggle) {
         navToggle.addEventListener('click', () => {
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // --- CONFIGURAÇÕES DO BACKEND ---
+    
 
     const STRAPI_URL = "https://mindful-card-cc3832d952.strapiapp.com";
     const STRAPI_TOKEN = "f90c12ae24aef1333c12c7ecff452e12e72cf250962a4cc8b0f8f233c5b14c93abfbd2d81dfe273fedd15889e5c0a3a19734e67ca87fcf8c649f85d3f35038f5d612ff3ff9a2dbe0305b65c0d76c99dbc3499c5742734caef9d1cf412e1baa79a5a2a9ea85253036cb11fe9a8805e2dccb470978b4ce14a0fb7a2bc187f02918";
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return new Date(dateString).toLocaleDateString('pt-BR', options);
     };
 
-    //Lógica para a secção de blog na homepage (index.html)
+    
     const homeBlogGrid = document.querySelector('.blog-grid');
     if (homeBlogGrid) {
         const fetchHomePosts = async () => {
@@ -89,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchHomePosts();
     }
 
-    // Lógica para a página principal do blog (blog.html)
+    
     const blogListContainer = document.querySelector('.blog-list-section');
     if (blogListContainer) {
         const fetchPosts = async () => {
@@ -133,7 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchPosts();
     }
 
-    // Lógica para a página de um único post (post.html)
+    
     const postArticleContainer = document.querySelector('.post-article');
     if (postArticleContainer) {
         const fetchSinglePost = async () => {
@@ -190,34 +190,34 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchSinglePost();
     }
 
-    // --- LÓGICA DO MODAL DE WHATSAPP ---
+    
     const fab = document.getElementById('whatsapp-fab');
     const modalOverlay = document.getElementById('whatsapp-modal-overlay');
     const closeModalBtn = document.getElementById('whatsapp-modal-close');
     const form = document.getElementById('whatsapp-form');
 
-    // Função para abrir o modal
+    
     const openModal = (e) => {
         e.preventDefault();
         modalOverlay.classList.add('visible');
     };
 
-    // Função para fechar o modal
+    
     const closeModal = () => {
         modalOverlay.classList.remove('visible');
     };
 
-    // Abrir modal ao clicar no botão flutuante
+    
     if (fab) {
         fab.addEventListener('click', openModal);
     }
 
-    // Fechar modal ao clicar no 'X'
+   
     if (closeModalBtn) {
         closeModalBtn.addEventListener('click', closeModal);
     }
 
-    // Fechar modal ao clicar fora da área do modal
+    
     if (modalOverlay) {
         modalOverlay.addEventListener('click', (e) => {
             if (e.target === modalOverlay) {
@@ -226,9 +226,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Lidar com o envio do formulário
+    
     if (form) {
-        // Aplicar máscara de telefone com iMask.js
+        
         const phoneInput = document.getElementById('whatsapp-phone');
         const phoneMask = IMask(phoneInput, {
             mask: '(00) 00000-0000'
@@ -237,28 +237,78 @@ document.addEventListener('DOMContentLoaded', () => {
         form.addEventListener('submit', (e) => {
             e.preventDefault();
             
-            // Pegar os dados do formulário
+            
             const name = document.getElementById('whatsapp-name').value;
             const service = document.getElementById('whatsapp-service').value;
             
-            // Número de telefone da sua empresa (apenas números)
+            
             const businessPhone = '5513996901919';
             
-            // Montar a mensagem pré-pronta, agora mais limpa
+            
             const message = `Olá! Meu nome é *${name}*, tenho interesse em *${service}*.`;
             
-            // Codificar a mensagem para URL
+            
             const encodedMessage = encodeURIComponent(message);
             
-            // Criar a URL do WhatsApp
+            
             const whatsappUrl = `https://wa.me/${businessPhone}?text=${encodedMessage}`;
             
-            // Abrir o WhatsApp em uma nova aba
+            
             window.open(whatsappUrl, '_blank');
             
-            // Opcional: fechar o modal e limpar o formulário após o envio
+            
             closeModal();
             form.reset();
+        });
+    }
+    
+    const contactForm = document.getElementById('contact-form');
+    if (contactForm) {
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault(); 
+
+            
+            const N8N_WEBHOOK_URL = "https://n8n.srv1005861.hstgr.cloud/webhook/b383b693-b319-4213-b7d8-5f239a2141ff";
+
+            const form = e.target;
+            const formData = new FormData(form);
+            const button = form.querySelector('button[type="submit"]');
+            const buttonTextOriginal = button.textContent;
+
+            
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                message: formData.get('message')
+            };
+
+            
+            button.disabled = true;
+            button.textContent = "Enviando...";
+
+            try {
+                const response = await fetch(N8N_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Falha no envio');
+                }
+
+                // Se tudo deu certo, redireciona para a página de obrigado
+                window.location.href = '/obrigado.html';
+
+            } catch (error) {
+                console.error('Erro ao enviar formulário:', error);
+                alert('Ocorreu um erro ao enviar sua mensagem. Tente novamente.');
+                // Reativa o botão em caso de erro
+                button.disabled = false;
+                button.textContent = buttonTextOriginal;
+            }
         });
     }
 });
