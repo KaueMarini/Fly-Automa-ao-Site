@@ -1,0 +1,22 @@
+# Normalize line endings for web project
+# Force LF in the repository for these text file types
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
+*.md text eol=lf
+*.svg text eol=lf
+*.webmanifest text eol=lf
+
+# Treat images and binaries as binary (no EOL conversion)
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+
+# Optional: ensure shell scripts keep LF
+*.sh text eol=lf

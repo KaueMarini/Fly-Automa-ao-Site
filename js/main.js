@@ -27,16 +27,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
     
     const navToggle = document.querySelector('.nav-toggle');
+    const navMenu = document.querySelector('.nav-menu');
     if (navToggle) {
+        
+        navToggle.setAttribute('aria-expanded', 'false');
         navToggle.addEventListener('click', () => {
-            document.body.classList.toggle('nav-open');
+            const isOpen = document.body.classList.toggle('nav-open');
+            navToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
         });
     }
 
     
+    if (navMenu) {
+        navMenu.addEventListener('click', (e) => {
+            const target = e.target;
+            if (target.tagName === 'A' && document.body.classList.contains('nav-open')) {
+                document.body.classList.remove('nav-open');
+                if (navToggle) navToggle.setAttribute('aria-expanded', 'false');
+            }
+        });
+    }
 
-    // Atenção: chaves e URLs sensíveis foram removidas do frontend.
-    // As requisições agora apontam para Netlify Functions em /.netlify/functions/*
 
     const formatDate = (dateString) => {
         if (!dateString) return '';
@@ -52,7 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 const response = await fetch('/.netlify/functions/get-home-posts');
                 if (!response.ok) throw new Error('Falha ao buscar os artigos para a home');
                 const payload = await response.json();
-                // payload pode ser um objeto com { data: [...] } ou já o array dependendo da função
                 const data = payload.data || payload;
                 
                 homeBlogGrid.innerHTML = ''; 
@@ -63,7 +73,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 data.forEach(item => {
                     const post = item.attributes ? item.attributes : item;
-                    // ajustar caminho da imagem caso venha com data.attributes
                     const cover = post.cover?.data?.attributes || post.cover;
                     const imageUrl = (cover && (cover.formats?.small?.url || cover.url)) || 'https://images.unsplash.com/photo-1544214249-9f342c81e87d?q=80&w=2070&auto=format=fit=crop';
                     const postSlug = post.slug || post.slug;
@@ -71,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const postCardHTML = `
                         <a href="post.html?slug=${postSlug}" class="post-card fade-in visible">
                             <div class="post-image-wrapper">
-                                <img src="${imageUrl.startsWith('http') ? imageUrl : imageUrl}" alt="Imagem do artigo ${post.title || ''}">
+                                <img src="${imageUrl.startsWith('http') ? imageUrl : imageUrl}" loading="lazy" decoding="async" alt="Imagem do artigo ${post.title || ''}">
                             </div>
                             <div class="post-content">
                                 <span class="post-category">${post.category?.data?.attributes?.name || post.category?.name || 'Sem Categoria'}</span>
@@ -116,7 +125,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const postCardHTML = `
                         <a href="post.html?slug=${post.slug}" class="post-card-full fade-in visible">
                             <div class="post-image-wrapper">
-                                <img src="${imageUrl}" alt="Imagem do artigo ${post.title || ''}">
+                                <img src="${imageUrl}" loading="lazy" decoding="async" alt="Imagem do artigo ${post.title || ''}">
                             </div>
                             <div class="post-content">
                                 <span class="post-category">${post.category?.data?.attributes?.name || post.category?.name || 'Sem Categoria'}</span>
@@ -154,17 +163,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (!response.ok) throw new Error('Artigo não encontrado');
 
                 const payload = await response.json();
-                const data = payload.data || payload;
+                // Normaliza diferentes formatos de resposta (array, objeto, payload.data)
+                let data = payload.data || payload;
+                let postSource = null;
 
-                if (!data || data.length === 0) {
-                     postArticleContainer.innerHTML = '<h1>Artigo não encontrado.</h1>';
+                if (Array.isArray(data)) {
+                    postSource = data[0] || null;
+                } else if (data && data.data) {
+                    // Alguns endpoints podem empacotar novamente em data
+                    postSource = Array.isArray(data.data) ? data.data[0] : data.data;
+                } else {
+                    postSource = data;
+                }
+
+                if (!postSource) {
+                    postArticleContainer.innerHTML = '<h1>Artigo não encontrado.</h1>';
                     return;
                 }
 
-                const post = data[0].attributes ? data[0].attributes : data[0];
+                const post = postSource.attributes ? postSource.attributes : postSource;
                 document.title = `${post.title || 'Artigo'} | Fly Automação`;
                 const cover = post.cover?.data?.attributes || post.cover;
-                const imageUrl = (cover && (cover.url || cover.formats?.large?.url)) || 'https://images.unsplash.com/photo-1677756119517-756a/1w=2070&auto=format&fit=crop';
+                const imageUrl = (cover && (cover.formats?.large?.url || cover.url)) || 'https://images.unsplash.com/photo-1677756119517-756a/1w=2070&auto=format&fit=crop';
 
                 let postBodyHTML = '';
                 if (post.blocks && Array.isArray(post.blocks)) {
@@ -182,7 +202,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="post-date">Publicado em ${formatDate(post.createdAt)}</span>
                     </header>
                     <div class="post-main-image fade-in visible">
-                        <img src="${imageUrl}" alt="Imagem principal do artigo">
+                        <img src="${imageUrl}" loading="lazy" decoding="async" alt="Imagem principal do artigo">
                     </div>
                     <div class="post-body fade-in visible">
                         ${postBodyHTML}
@@ -274,7 +294,7 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault(); 
 
             
-        // N8N webhook removido do frontend — agora usamos a Netlify Function /submit-form
+        
 
             const form = e.target;
             const formData = new FormData(form);
